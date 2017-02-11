@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch){
 
 function mapStateToProps(state) {
   return {
-    //navigationState: state.navigationState
+  	// Navigation stuff goes here
   };
 }
 

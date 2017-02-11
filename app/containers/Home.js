@@ -3,11 +3,9 @@ import { connect } from 'react-redux';
 import {
 	ScrollView,
 	View,
-	TextInput,
-	Image,
 	Text,
-	TouchableHighlight,
-	StyleSheet
+	ActivityIndicator,
+	TouchableHighlight
 } from 'react-native'
 import { fetchGasPrices } from '../actions/gas' 
 
@@ -15,10 +13,6 @@ class Home extends Component {
 	constructor(props){
 		super(props);
 		this.state = { fetching: true }
-	}
-
-	componentDidMount() {
-		const { dispatch } = this.props;
 		this.fetchGas();
 	}
 
@@ -29,18 +23,26 @@ class Home extends Component {
 	}
 
 	mapGasStations(){
-
+		return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key])
 	}
 
 	render() {
 		return(
 			<View>
 				<View>
-					<Text>Title here</Text>
+					<Text>Bensínstöðvar</Text>
 				</View>
 				<View>
-					{ !this.state.fetching && <Text>Finished fetching data!</Text>}
-					{ this.state.fetching ? <Text>Fetching data...</Text> : null}
+					{ this.state.fetching ? 
+						<ActivityIndicator		
+	                   		style={[{height: 80}]}		
+	                    	size="large"		
+ 	                 	/>
+ 	                 	: null
+					}
+					{ !this.state.fetching && this.mapGasStations().map((result) => {
+						return <Text key={result.id} > {result.name}</Text>
+					})}				
 				</View>
 			</View>
 		)
@@ -49,7 +51,7 @@ class Home extends Component {
 
 function mapStateToProps(state){
     return {
-        data: state.data,
+        gasPrices: state.gasPrices,
     }
 }
 

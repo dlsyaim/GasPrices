@@ -11,19 +11,14 @@ export function fetchGasPrices() {
 
 function requestGasPrices(){
 	return {
-		type: types.GET_GAS_PRICES
+		type: types.REQUEST_GAS_PRICES
 	}
 }
 
 function receiveGasPrices(json){
+	//console.log("Json: " + json.results);
 	return {
 		type: types.RECEIVE_GAS_PRICES,
 		data: json.results
-	}
-}
-
-function setGas(data) {
-	return {
-		type: types.SET_GAS_PRICES
 	}
 }
