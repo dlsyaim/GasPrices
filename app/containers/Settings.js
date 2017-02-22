@@ -10,13 +10,29 @@ import {
 	TextInput
 } from 'react-native'
 
+import { setFuelType, setDistanceLength, setDiscountKey } from '../actions/settings' 
+
 class Settings extends Component {
+	constructor(props){
+		super(props);
+	}
+
+	setFuel(input){
+        this.props.dispatch(setFuelType(input));
+	}
+	setDistance(input){
+        this.props.dispatch(setDistanceLength(input));
+	}
+	setDiscount(input){
+        this.props.dispatch(setDiscountKey(input));
+    }
+
 	render() {
 		return(
 			<View style={styles.scene}>
 				<View style={styles.setting}>
 					<Text style={styles.settingTitle}>Eldsneyti</Text>
-				      <Picker selectedValue = "bensin" onValueChange = { () => console.log("Changing value") }>
+				      <Picker selectedValue="bensin" onValueChange = {(value) => this.setFuel(value) }>
 				         <Picker.Item label="Bensín" value="bensin" />
 				         <Picker.Item label="Dísel" value="diesel" />
 				      </Picker>
@@ -39,12 +55,6 @@ class Settings extends Component {
 			        		onValueChange={ () => false }
 			          		value={ false } />
 						<Text>Orkan</Text>
-		          	</View>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
-						<Text>Dælan</Text>
 		          	</View>
 					<View style={styles.row}>
 						<Switch
@@ -105,7 +115,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
     return {
-        gasPrices: state.gasPrices,
+        fuelType: state.fuelType,
+        distance: state.distance,
     }
 }
 

@@ -13,7 +13,7 @@ import { fetchGasPrices } from '../actions/gas'
 class Home extends Component {
 	constructor(props){
 		super(props);
-		this.state = { fetching: true }
+		this.state = { fetching: true };
 		this.fetchGas();
 	}
 
@@ -49,6 +49,7 @@ class Home extends Component {
 
 					})}				
 				</ScrollView>
+
 			</View>
 		)
 	}
