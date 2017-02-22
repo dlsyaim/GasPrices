@@ -26,17 +26,12 @@ class Home extends Component {
 	// Returns first 10 gas stations in array to display
 	// Todo: add filter
 	mapGasStations(){
-		return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).slice(0,10)
+		return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).slice(0,5)
 	}
 
 	render() {
 		return(
 			<View style={styles.scene}>
-				<View style={styles.topBar}>
-					<TouchableHighlight style={styles.button} onPress={ console.log("click") }><Text style={styles.buttonText}>Vegalengd</Text></TouchableHighlight>
-					<TouchableHighlight style={styles.button} onPress={ console.log("click") }><Text style={styles.buttonText}>Flokka eftir</Text></TouchableHighlight>
-					<TouchableHighlight style={styles.button} onPress={ console.log("click") }><Text style={styles.buttonText}>Afsláttarkort</Text></TouchableHighlight>
-				</View>
 				<ScrollView style={styles.scrollSection}>
 					{ this.state.fetching ? 
 						<ActivityIndicator		
@@ -46,7 +41,7 @@ class Home extends Component {
  	                 	: null
 					}
 					{ !this.state.fetching && this.mapGasStations().map((result) => {
-						return <View key={result.key} >
+						return <View style={styles.gasStationBox} key={result.key} >
 							<Text style={styles.gasStationTitle}>{result.company} {result.name}</Text>
 							<Text style={styles.gasStationText}>Diesel: {result.diesel}</Text>
 							<Text style={styles.gasStationText}>Bensín: {result.bensin95}</Text>							
@@ -73,19 +68,10 @@ const styles = StyleSheet.create({
   scrollSection: {
     flex: 0.8
   },
-  button: {
-    backgroundColor: '#AF98EF',
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    margin: 5,
-    width: 100,
-    borderRadius: 10
-  },
-  buttonText: {
-    textAlign: 'center',
-  },
   gasStationBox: {
-
+      marginBottom: 20,
+      marginLeft: 5,
+      marginTop: 5
   },
   gasStationTitle: {
   	fontWeight: 'bold',
