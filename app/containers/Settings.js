@@ -13,6 +13,10 @@ import {
 import { setFuelType, setDistanceLength, setDiscountKey } from '../actions/settings' 
 
 class Settings extends Component {
+	static navigationOptions = {
+		title: 'Stillingar',
+	};
+
 	constructor(props){
 		super(props);
 	}
@@ -26,6 +30,8 @@ class Settings extends Component {
 	setDiscount(input, value){
         this.props.dispatch(setDiscountKey(input, value));
     }
+
+
 
 	render() {
 		return(
@@ -83,7 +89,7 @@ class Settings extends Component {
 		          	</View>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => this.setDiscount('skeljungurKey', !this.valueprops.settingsFilters.skeljungurKey) }
+			        		onValueChange={ () => this.setDiscount('skeljungurKey', !this.props.settingsFilters.skeljungurKey) }
 			          		value={ this.props.settingsFilters.skeljungurKey } />
 						<Text>Skeljungur</Text>
 		          	</View>

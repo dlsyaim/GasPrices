@@ -10,14 +10,15 @@ import Settings from './Settings'
 import { 
 	Animated,
 	StyleSheet,
-	View
+	View,
+	Button
 } from 'react-native'
 
 // Import tab navigator
-import { TabNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
-const Tabs = TabNavigator({
-	Gasvaktin: {
+const Tabs = StackNavigator({
+	Home: {
 		screen: Home,
 	},
 	Stillingar: {

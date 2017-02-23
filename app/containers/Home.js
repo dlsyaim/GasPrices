@@ -6,11 +6,16 @@ import {
 	Text,
 	ActivityIndicator,
 	TouchableHighlight,
-	StyleSheet
+	StyleSheet,
+	Button
 } from 'react-native'
 import { fetchGasPrices } from '../actions/gas' 
 
 class Home extends Component {
+	static navigationOptions = {
+		title: 'Gasvaktin',
+	};
+
 	constructor(props){
 		super(props);
 		this.state = { fetching: true };
@@ -32,6 +37,10 @@ class Home extends Component {
 	render() {
 		return(
 			<View style={styles.scene}>
+				<Button
+					onPress={() => this.props.navigation.navigate('Stillingar')}
+					title="Stillingar"
+				/>
 				<ScrollView style={styles.scrollSection}>
 					{ this.state.fetching ? 
 						<ActivityIndicator		
