@@ -14,9 +14,10 @@ export function setDistanceLength(input){
 	}
 }
 
-export function setDiscountKey(input){
+export function setDiscountKey(input, value){
 	return {
 		type: types.SET_DISCOUNT,
-		discountName: input
+		discountName: input,
+		value: value
 	}
 }

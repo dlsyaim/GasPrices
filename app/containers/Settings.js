@@ -23,8 +23,8 @@ class Settings extends Component {
 	setDistance(input){
         this.props.dispatch(setDistanceLength(input));
 	}
-	setDiscount(input){
-        this.props.dispatch(setDiscountKey(input));
+	setDiscount(input, value){
+        this.props.dispatch(setDiscountKey(input, value));
     }
 
 	render() {
@@ -32,7 +32,7 @@ class Settings extends Component {
 			<View style={styles.scene}>
 				<View style={styles.setting}>
 					<Text style={styles.settingTitle}>Eldsneyti</Text>
-				      <Picker selectedValue="bensin" onValueChange = {(value) => this.setFuel(value) }>
+				      <Picker selectedValue={this.props.fuelType} onValueChange = {(value) => this.setFuel(value) }>
 				         <Picker.Item label="Bensín" value="bensin" />
 				         <Picker.Item label="Dísel" value="diesel" />
 				      </Picker>
@@ -43,7 +43,8 @@ class Settings extends Component {
 						<TextInput 
 							keyboardType='numeric'
 							style={styles.textInput}
-							maxLength={3} />
+							maxLength={3} 
+							onChangeText={ (value) => this.setDistance(value) } />
 						<Text style={styles.label}>km</Text>
 					</View>
 				</View>
@@ -52,38 +53,38 @@ class Settings extends Component {
 					<Text style={styles.settingTitle}>Afsláttarlyklar</Text>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
+			        		onValueChange={ () => this.setDiscount('orkanKey', !this.props.settingsFilters.orkanKey) }
+			          		value={ this.props.settingsFilters.orkanKey } />
 						<Text>Orkan</Text>
 		          	</View>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
+			        		onValueChange={ () => this.setDiscount('atlantsoliaKey', !this.props.settingsFilters.atlantsoliaKey) }
+			          		value={ this.props.settingsFilters.atlantsoliaKey } />
 						<Text>Atlantsolía</Text>
 		          	</View>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
+			        		onValueChange={ () => this.setDiscount('obKey', !this.props.settingsFilters.obKey) }
+			          		value={ this.props.settingsFilters.obKey } />
 						<Text>ÓB</Text>
 		          	</View>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
+			        		onValueChange={ () => this.setDiscount('n1Key', !this.props.settingsFilters.n1Key) }
+			          		value={ this.props.settingsFilters.n1Key } />
 						<Text>N1</Text>
 		          	</View>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
+			        		onValueChange={ () => this.setDiscount('olisKey', !this.props.settingsFilters.olisKey) }
+			          		value={ this.props.settingsFilters.olisKey } />
 						<Text>Olís</Text>
 		          	</View>
 					<View style={styles.row}>
 						<Switch
-			        		onValueChange={ () => false }
-			          		value={ false } />
+			        		onValueChange={ () => this.setDiscount('skeljungurKey', !this.valueprops.settingsFilters.skeljungurKey) }
+			          		value={ this.props.settingsFilters.skeljungurKey } />
 						<Text>Skeljungur</Text>
 		          	</View>
 	          	</View>
@@ -99,7 +100,6 @@ const styles = StyleSheet.create({
   }, 
   row: {
   	flexDirection: 'row',
-  	backgroundColor: '#00FF00'
   },
   setting: {
   	marginBottom: 25,
@@ -112,11 +112,9 @@ const styles = StyleSheet.create({
   	textAlign: 'center'
   }
 });
-
 function mapStateToProps(state){
     return {
-        fuelType: state.fuelType,
-        distance: state.distance,
+        settingsFilters: state.settingsFilters,
     }
 }
 

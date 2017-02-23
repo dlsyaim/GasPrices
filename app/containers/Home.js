@@ -39,14 +39,13 @@ class Home extends Component {
 	                    	size="large"		
  	                 	/>
  	                 	: null
-					}
+					}	
 					{ !this.state.fetching && this.mapGasStations().map((result) => {
 						return <View style={styles.gasStationBox} key={result.key} >
 							<Text style={styles.gasStationTitle}>{result.company} {result.name}</Text>
 							<Text style={styles.gasStationText}>Diesel: {result.diesel}</Text>
-							<Text style={styles.gasStationText}>Bensín: {result.bensin95}</Text>							
+							<Text style={styles.gasStationText}>Bensín: {result.bensin95}</Text>					
 						</View>
-
 					})}				
 				</ScrollView>
 
@@ -85,6 +84,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
     return {
         gasPrices: state.gasPrices,
+        settings: state.settingsFilters
     }
 }
 

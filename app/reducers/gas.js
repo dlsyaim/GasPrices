@@ -4,7 +4,7 @@ export function gasPrices(state = {}, action) {
 	switch(action.type){
 		case types.REQUEST_GAS_PRICES:
 			return Object.assign({
-				isFetching: true
+				isFetching: true,
 			});
 		case types.RECEIVE_GAS_PRICES:
 			return Object.assign({
