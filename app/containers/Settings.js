@@ -7,14 +7,24 @@ import {
 	Switch,
 	StyleSheet,
 	Picker,
-	TextInput
+	Slider
 } from 'react-native'
 
-import { setFuelType, setDistanceLength, setDiscountKey } from '../actions/settings' 
+import { setFuelType, setDistanceLength } from '../actions/settings' 
+
+import DiscountSwitch from '../components/DiscountSwitch' 
 
 class Settings extends Component {
 	static navigationOptions = {
 		title: 'Stillingar',
+		header: {
+			style: {
+				backgroundColor: '#548b54',
+			},
+			titleStyle: {
+				color: '#FFFFFF'
+			}
+		}
 	};
 
 	constructor(props){
@@ -27,72 +37,39 @@ class Settings extends Component {
 	setDistance(input){
         this.props.dispatch(setDistanceLength(input));
 	}
-	setDiscount(input, value){
-        this.props.dispatch(setDiscountKey(input, value));
-    }
-
-
 
 	render() {
 		return(
 			<View style={styles.scene}>
 				<View style={styles.setting}>
 					<Text style={styles.settingTitle}>Eldsneyti</Text>
-				      <Picker selectedValue={this.props.fuelType} onValueChange = {(value) => this.setFuel(value) }>
-				         <Picker.Item label="Bensín" value="bensin" />
+				      <Picker selectedValue={this.props.settingsFilters.fuelType} onValueChange = {(value) => this.setFuel(value) }>
+				         <Picker.Item label="Bensín 95" value="bensin95" />
 				         <Picker.Item label="Dísel" value="diesel" />
 				      </Picker>
 		        </View>
 		        <View style={styles.setting}>
 					<Text style={styles.settingTitle}>Fjarlægð</Text>
 					<View style={styles.row}>
-						<TextInput 
-							keyboardType='numeric'
-							style={styles.textInput}
-							maxLength={3} 
-							onChangeText={ (value) => this.setDistance(value) } />
-						<Text style={styles.label}>km</Text>
+						<Slider 
+							value={this.props.settingsFilters.distance}
+							minimumValue={0.2}
+							maximumValue={10}
+							step={0.1}
+							onSlidingComplete={ (value) => this.setDistance(value) } 
+							style={styles.slider} />
+						<Text style={{width: 100}}>{this.props.settingsFilters.distance.toFixed(1)} km</Text>
 					</View>
 				</View>
 
 				<View style={styles.setting}>
 					<Text style={styles.settingTitle}>Afsláttarlyklar</Text>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => this.setDiscount('orkanKey', !this.props.settingsFilters.orkanKey) }
-			          		value={ this.props.settingsFilters.orkanKey } />
-						<Text>Orkan</Text>
-		          	</View>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => this.setDiscount('atlantsoliaKey', !this.props.settingsFilters.atlantsoliaKey) }
-			          		value={ this.props.settingsFilters.atlantsoliaKey } />
-						<Text>Atlantsolía</Text>
-		          	</View>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => this.setDiscount('obKey', !this.props.settingsFilters.obKey) }
-			          		value={ this.props.settingsFilters.obKey } />
-						<Text>ÓB</Text>
-		          	</View>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => this.setDiscount('n1Key', !this.props.settingsFilters.n1Key) }
-			          		value={ this.props.settingsFilters.n1Key } />
-						<Text>N1</Text>
-		          	</View>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => this.setDiscount('olisKey', !this.props.settingsFilters.olisKey) }
-			          		value={ this.props.settingsFilters.olisKey } />
-						<Text>Olís</Text>
-		          	</View>
-					<View style={styles.row}>
-						<Switch
-			        		onValueChange={ () => this.setDiscount('skeljungurKey', !this.props.settingsFilters.skeljungurKey) }
-			          		value={ this.props.settingsFilters.skeljungurKey } />
-						<Text>Skeljungur</Text>
-		          	</View>
+					<DiscountSwitch stationName="Orkan" />
+					<DiscountSwitch stationName="Atlantsolía" />
+					<DiscountSwitch stationName="ÓB" />
+					<DiscountSwitch stationName="N1" />
+					<DiscountSwitch stationName="Olís" />
+					<DiscountSwitch stationName="Skeljungur" />
 	          	</View>
 			</View>
 		)
@@ -100,6 +77,9 @@ class Settings extends Component {
 }
 
 const styles = StyleSheet.create({
+  scene: {
+  	margin: 5,
+  },
   settingTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -110,9 +90,8 @@ const styles = StyleSheet.create({
   setting: {
   	marginBottom: 25,
   },
-  textInput: {
-  	padding: 5,
-  	width: 30
+  slider: {
+  	flex: 0.6
   },
   label: {
   	textAlign: 'center'

@@ -14,12 +14,21 @@ import { fetchGasPrices } from '../actions/gas'
 class Home extends Component {
 	static navigationOptions = {
 		title: 'Gasvaktin',
+		header: {
+			style: {
+				backgroundColor: '#548b54',
+			},
+			titleStyle: {
+				color: '#FFFFFF'
+			}
+		}
 	};
 
 	constructor(props){
 		super(props);
 		this.state = { fetching: true };
 		this.fetchGas();
+		this.mapGasStations.bind(this);
 	}
 
 	fetchGas(){
@@ -28,10 +37,23 @@ class Home extends Component {
         });
 	}
 
-	// Returns first 10 gas stations in array to display
-	// Todo: add filter
+	// Returns gas stations in order
 	mapGasStations(){
-		return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).slice(0,5)
+		if(1 === 0){
+			
+		}
+		else { // Order diesel/bensin95 results
+			if(this.props.settingsFilters.fuelType === 'diesel'){
+				return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){
+					return parseFloat(a.diesel) - parseFloat(b.diesel);	
+				}
+			)}
+			else if(this.props.settingsFilters.fuelType === 'bensin95'){
+				return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){
+					return parseFloat(a.bensin95) - parseFloat(b.bensin95);	
+				}	
+			)}
+		}
 	}
 
 	render() {
@@ -41,6 +63,7 @@ class Home extends Component {
 					onPress={() => this.props.navigation.navigate('Stillingar')}
 					title="Stillingar"
 				/>
+				<View><Text>Valið eldsneyti: {this.props.settingsFilters.fuelType}</Text></View>
 				<ScrollView style={styles.scrollSection}>
 					{ this.state.fetching ? 
 						<ActivityIndicator		
@@ -52,8 +75,12 @@ class Home extends Component {
 					{ !this.state.fetching && this.mapGasStations().map((result) => {
 						return <View style={styles.gasStationBox} key={result.key} >
 							<Text style={styles.gasStationTitle}>{result.company} {result.name}</Text>
-							<Text style={styles.gasStationText}>Diesel: {result.diesel}</Text>
-							<Text style={styles.gasStationText}>Bensín: {result.bensin95}</Text>					
+							{this.props.settingsFilters.fuelType === 'diesel' && 
+								<Text style={styles.gasStationText}>Verð: {result.diesel} ISK</Text>
+							}
+							{this.props.settingsFilters.fuelType === 'bensin95' &&
+								<Text style={styles.gasStationText}>Verð: {result.bensin95} ISK</Text>
+							}				
 						</View>
 					})}				
 				</ScrollView>
@@ -78,22 +105,24 @@ const styles = StyleSheet.create({
     flex: 0.8
   },
   gasStationBox: {
-      marginBottom: 20,
+      marginBottom: 10,
       marginLeft: 5,
-      marginTop: 5
+      marginRight: 5,
+      marginTop: 5,
+      flexDirection: 'row',
+      justifyContent: 'space-between'
   },
   gasStationTitle: {
   	fontWeight: 'bold',
   },
   gasStationText: {
-
   }
 });
 
 function mapStateToProps(state){
     return {
         gasPrices: state.gasPrices,
-        settings: state.settingsFilters
+        settingsFilters: state.settingsFilters
     }
 }
 

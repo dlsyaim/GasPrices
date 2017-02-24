@@ -17,7 +17,7 @@ import {
 // Import tab navigator
 import { StackNavigator } from 'react-navigation';
 
-const Tabs = StackNavigator({
+const Navigation = StackNavigator({
 	Home: {
 		screen: Home,
 	},
@@ -29,7 +29,7 @@ const Tabs = StackNavigator({
 class AppContainer extends Component {
     render(){
     	return (
-			<Tabs />
+			<Navigation />
     	)
     }
 }

@@ -1,14 +1,9 @@
 import * as types from '../actions/types'
 
 const initialState = {
-	fuelType: 'bensin',
-	distance: 5,
-	orkanKey: false,
-	atlantsoliaKey: false,
-	obKey: false,
-	n1Key: false,
-	olisKey: false,
-	skeljungurKey: false
+	fuelType: 'bensin95',
+	distance: 2.5,
+	keys: {'Orkan': false, 'Atlantsolía': false, 'ÓB': false, 'N1': false, 'Olís': false, 'Skeljungur': false},
 }
 
 function settings(state, action) {
@@ -18,6 +13,8 @@ function settings(state, action) {
   return state
 }
 
+
+// Todo: stop sending complete state every refresh, update function
 export function settingsFilters(state = initialState, action) {
 	switch(action.type){
 		case types.SET_FUEL_TYPE:
@@ -31,38 +28,10 @@ export function settingsFilters(state = initialState, action) {
 				distance: action.distance
 			});
 		case types.SET_DISCOUNT:
-			switch(action.discountName){
-				case 'orkanKey':
-					return Object.assign({
-						...state,
-						orkanKey: action.value,
-					});
-				case 'atlantsoliaKey':
-					return Object.assign({
-						...state,
-						atlantsoliaKey: action.value,
-					});
-				case 'obKey':
-					return Object.assign({
-						...state,
-						obKey: action.value
-					});
-				case 'n1Key':
-					return Object.assign({
-						...state,
-						n1Key: action.value,
-					});
-				case 'olisKey':
-					return Object.assign({
-						...state,
-						olisKey: action.value,
-					});
-				case 'skeljungurKey':
-					return Object.assign({
-						...state,
-						skeljungurKey: action.value,
-					});
-			}
+			state.keys[action.discountName] = action.value;
+			return Object.assign({}, state, {
+				...state,
+			});
 		default:
 			return state;
 	}
