@@ -16,7 +16,6 @@ class DiscountSwitch extends Component {
 	constructor(props){
 		super(props);
 		this.stationName = this.props.stationName;
-		console.log(this.props.settingsFilters.keys[this.props.stationName])
 	}
 
 	setDiscount(input, value){

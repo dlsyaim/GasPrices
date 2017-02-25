@@ -10,6 +10,8 @@ import {
 	Button
 } from 'react-native'
 import { fetchGasPrices } from '../actions/gas' 
+import GasStationInfo from '../components/GasStationInfo' 
+
 
 class Home extends Component {
 	static navigationOptions = {
@@ -38,19 +40,39 @@ class Home extends Component {
 	}
 
 	// Returns gas stations in order
+	// Todo: cleanup
 	mapGasStations(){
-		if(1 === 0){
+		keys = this.props.settingsFilters.keys;
+		if(1 === 0){ // Todo: check gps coordinates
 			
 		}
 		else { // Order diesel/bensin95 results
-			if(this.props.settingsFilters.fuelType === 'diesel'){
-				return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){
-					return parseFloat(a.diesel) - parseFloat(b.diesel);	
+			if(this.props.settingsFilters.fuelType === 'diesel'){ // If diesel is selected
+				return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){ // Sort the list
+					if(keys[a.company]){
+						if(keys[b.company]){
+							return parseFloat(a.diesel_discount) - parseFloat(b.diesel_discount); // If both companies a and b are discounted
+						}
+						return parseFloat(a.diesel_discount) - parseFloat(b.diesel); // If company a is discounted
+					}
+					else if(keys[b.company]){
+						return parseFloat(a.diesel) - parseFloat(b.diesel_discount); // If company b is discounted
+					}
+					return parseFloat(a.diesel) - parseFloat(b.diesel);	// If neither company is discounted
 				}
 			)}
-			else if(this.props.settingsFilters.fuelType === 'bensin95'){
-				return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){
-					return parseFloat(a.bensin95) - parseFloat(b.bensin95);	
+			else if(this.props.settingsFilters.fuelType === 'bensin95'){ // If bensin95 is selected
+				return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){ // Sort the list
+					if(keys[a.company]){
+						if(keys[b.company]){
+							return parseFloat(a.bensin95_discount) - parseFloat(b.bensin95_discount); // If both companies a and b are discounted
+						}
+						return parseFloat(a.bensin95_discount) - parseFloat(b.bensin95); // If company a is discounted
+					}
+					else if(keys[b.company]){
+						return parseFloat(a.bensin95) - parseFloat(b.bensin95_discount); // If company b is discounted
+					}
+					return parseFloat(a.bensin95) - parseFloat(b.bensin95);	// If neither company is discounted
 				}	
 			)}
 		}
@@ -63,7 +85,7 @@ class Home extends Component {
 					onPress={() => this.props.navigation.navigate('Stillingar')}
 					title="Stillingar"
 				/>
-				<View><Text>Valið eldsneyti: {this.props.settingsFilters.fuelType}</Text></View>
+				<Text>Valið eldsneyti: {this.props.settingsFilters.fuelType}</Text>
 				<ScrollView style={styles.scrollSection}>
 					{ this.state.fetching ? 
 						<ActivityIndicator		
@@ -74,14 +96,11 @@ class Home extends Component {
 					}	
 					{ !this.state.fetching && this.mapGasStations().map((result) => {
 						return <View style={styles.gasStationBox} key={result.key} >
-							<Text style={styles.gasStationTitle}>{result.company} {result.name}</Text>
-							{this.props.settingsFilters.fuelType === 'diesel' && 
-								<Text style={styles.gasStationText}>Verð: {result.diesel} ISK</Text>
-							}
-							{this.props.settingsFilters.fuelType === 'bensin95' &&
-								<Text style={styles.gasStationText}>Verð: {result.bensin95} ISK</Text>
-							}				
-						</View>
+									{ this.props.settingsFilters.keys[result.company] // Send discounted prices to GasStationInfo if discount key is active
+										&& (<GasStationInfo result={result} bensin95={result.bensin95_discount + " ISK (með afslætti)"} diesel={result.diesel_discount + " ISK (með afslætti)"} />)}	
+									{!this.props.settingsFilters.keys[result.company] // Send regular prices to GasStationInfo if discount key is not active
+										&& (<GasStationInfo result={result} bensin95={result.bensin95 + " ISK"} diesel={result.diesel + " ISK"} />)}	
+								</View>
 					})}				
 				</ScrollView>
 
