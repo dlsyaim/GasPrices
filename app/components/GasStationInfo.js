@@ -9,38 +9,50 @@ import {
 	Picker,
 	Slider
 } from 'react-native'
-import GLOBALS from '../globals'
 
 class GasStationInfo extends Component {
 	constructor(props){
 		super(props);
-		this.with_key = "með afslætti"
-		this.without_key = "án afsláttar"
-		this.imageUrl = '../images/' + this.props.result.company + '.png';
+		this.with_key = "með 🔑💳"
+		this.without_key = ""
+		this.images = {
+			'Atlantsolía': require('../images/Atlantsolía.png'),
+			'Dælan': require('../images/Dælan.png'),
+			'N1': require('../images/N1.png'),
+			'ÓB': require('../images/ÓB.png'),
+			'Olís': require('../images/Olís.png'),
+			'Orkan X': require('../images/Orkan X.png'),
+			'Orkan': require('../images/Orkan.png'),
+			'Skeljungur': require('../images/Skeljungur.png'),
+		}
 		console.log("ImageUrl: " + this.imageUrl);
 	}
 
 	render() {
 		return(
 			<View style={styles.gasStationBox}>
-				<Image style={styles.icons} source={{uri: this.imageUrl}} />
-				<View>
-					<View style={styles.row}>
+				<View style={styles.row}>
+					<Image style={styles.icons} source={this.images[this.props.result.company]} />
+					<View>
 						<Text style={styles.gasStationTitle}>{this.props.result.company} {this.props.result.name}</Text>
-						<Text style={styles.gasStationText}>{this.props.distance + ' km'}</Text>
+						<View>
+							{ this.props.main_price < this.props.sub_price 
+								&& [<Text>{this.props.main_price} ISK {this.props.key_exists && this.with_key}</Text>,
+								[this.props.key_exists && <Text style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.without_key]}</Text>]]
+							}
+							{
+								this.props.main_price > this.props.sub_price
+								&& [<Text>{this.props.main_price} ISK {this.props.key_exists && this.without_key}</Text>,
+								[this.props.key_exists && <Text style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.with_key]}</Text>]]
+							}
+						</View>
 					</View>
-					{ this.props.main_price < this.props.sub_price 
-						&& [<Text>{this.props.main_price} ISK {this.props.key_exists && this.with_key}</Text>,
-						[this.props.key_exists && <Text style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.with_key]}</Text>]]
-					}
-					{
-						this.props.main_price > this.props.sub_price
-						&& [<Text>{this.props.main_price} ISK {this.props.key_exists && this.without_key}</Text>,
-						[this.props.key_exists && <Text style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.with_key]}</Text>]]
-					}
 				</View>
-				<Image style={styles.map} source={{uri: this.imageUrl}} />
-		   	</View>
+				<View>
+					<Image style={styles.map} source={require('../images/mapIcon.png')} />
+					<Text style={styles.gasStationText}>{this.props.distance + ' km'}</Text>
+				</View>
+			</View>
 		)
 	}
 }
@@ -48,13 +60,13 @@ class GasStationInfo extends Component {
 const styles = StyleSheet.create({
 	  gasStationBox: {
 	      marginBottom: 10,
-	      marginLeft: 5,
-	      marginRight: 5,
+	      marginLeft: 10,
+	      marginRight: 10,
 	      marginTop: 5,
 	      flex: 1,
 	      flexDirection: 'row',
 	      justifyContent: 'space-between',
-	      backgroundColor: '#e0ffff',
+	      backgroundColor: 'white',
 	      alignItems: 'center'
 	  },
 	  row: {
@@ -72,14 +84,15 @@ const styles = StyleSheet.create({
 	  	fontStyle: 'italic'
 	  },
 	  icons: {
-	  	width: 50,
-	  	height: 50,
-	  	backgroundColor: 'red',
+	  	width: 70,
+	  	height: 70,
+	  	margin: 5
 	  },
 	  map: {
 	  	width: 50,
 	  	height: 50,
 	  	backgroundColor: 'red',
+	  	margin: 5,
 	  }
 });
 
