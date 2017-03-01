@@ -14,26 +14,19 @@ import GasStationInfo from '../components/GasStationInfo'
 
 
 class Home extends Component {
-	static navigationOptions = {
-		title: 'Gasvaktin',
-		header: {
-			style: {
-				backgroundColor: '#548b54',
-			},
-			titleStyle: {
-				color: '#FFFFFF'
-			}
-		}
-	};
-
 	constructor(props){
 		super(props);
-		this.state = { fetching: true, latitude: null, longitude: null };
+		this.state = { 
+			fetching: true, 
+			latitude: null, 
+			longitude: null, 
+		};
 		this.fetchGas();
 		this.mapGasStations.bind(this);
 	}
 
 	componentDidMount() {
+		// Get Geolocation information
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				this.setState({
@@ -41,7 +34,7 @@ class Home extends Component {
           			longitude: position.coords.longitude,
 				});
 			},
-			(error) => alert(JSON.stringify(error)),
+			(error) => alert(JSON.stringify("Error getting GPS coordinates.")),
 			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 		);
 		this.watchID = navigator.geolocation.watchPosition((position) => {
@@ -64,11 +57,13 @@ class Home extends Component {
 	}
 
 	// Returns gas stations in order
-	// Todo: cleanup
 	mapGasStations(){
 		keys = this.props.settingsFilters.keys;
-		if(this.props.settingsFilters.fuelType === 'diesel'){ // If diesel is selected
-			return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){ // Sort the list
+		fuelType = this.props.settingsFilters.fuelType;
+		data = this.props.gasPrices.data;
+
+		if(fuelType === 'diesel'){ // If diesel is selected
+			return Object.keys(data).map(key => data[key]).sort(function(a, b){ // Sort the list
 				if(keys[a.company]){
 					if(keys[b.company]){
 						return parseFloat(a.diesel_discount) - parseFloat(b.diesel_discount); // If both companies a and b are discounted
@@ -81,8 +76,8 @@ class Home extends Component {
 				return parseFloat(a.diesel) - parseFloat(b.diesel);	// If neither company is discounted
 			}
 		)}
-		else if(this.props.settingsFilters.fuelType === 'bensin95'){ // If bensin95 is selected
-			return Object.keys(this.props.gasPrices.data).map(key => this.props.gasPrices.data[key]).sort(function(a, b){ // Sort the list
+		else if(fuelType === 'bensin95'){ // If bensin95 is selected
+			return Object.keys(data).map(key => data[key]).sort(function(a, b){ // Sort the list
 				if(keys[a.company]){
 					if(keys[b.company]){
 						return parseFloat(a.bensin95_discount) - parseFloat(b.bensin95_discount); // If both companies a and b are discounted
@@ -99,7 +94,7 @@ class Home extends Component {
 
 
 	// Function from: http://www.movable-type.co.uk/scripts/latlong.html
-	isWithinRange(lat1, lat2, lon1, lon2) {
+	displayDistance(lat1, lat2, lon1, lon2) {
 	  	var R = 6371; // Radius of the earth in km
 		var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
 	  	var dLon = this.deg2rad(lon2-lon1); 
@@ -110,9 +105,9 @@ class Home extends Component {
 	  	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	  	var d = R * c; // Distance in km
 		if (d < this.props.settingsFilters.distance){
-			return true;
+			return d;
 		}
-		return false
+		return undefined
 	}
 
 	// Function from: http://www.movable-type.co.uk/scripts/latlong.html
@@ -123,26 +118,40 @@ class Home extends Component {
 	render() {
 		return(
 			<View style={styles.scene}>
-				<Button
-					onPress={() => this.props.navigation.navigate('Stillingar')}
-					title="Stillingar"
-				/>
+				<View style={styles.settingsMenu}>
+					<View style={styles.row}>
+						<Text style={styles.settingsText}>{this.props.settingsFilters.fuelType == 'bensin95' ? "Bensín 95" : "Dísel"} í {this.props.settingsFilters.distance.toFixed(1)} km fjarlægð</Text>
+					</View>
+					<Button
+						onPress={() => this.props.navigation.navigate('Stillingar')}
+						title="Breyta"
+					/>
+				</View>
+
 				<ScrollView style={styles.scrollSection}>
 					{ this.state.fetching ? 
 						<ActivityIndicator		
 	                   		style={[{height: 80}]}		
 	                    	size="large"		
  	                 	/>
- 	                 	: null
-					}	
-					{ !this.state.fetching && this.mapGasStations().map((result) => {
+ 	                 	: this.mapGasStations().map((result) => {
+							distance = this.displayDistance(this.state.latitude, result.geo.lat, this.state.longitude, result.geo.lon) 
 							return (
-								this.isWithinRange(this.state.latitude, result.geo.lat, this.state.longitude, result.geo.lon) 
-								&& <View style={styles.gasStationBox} key={result.key} >
-									{ this.props.settingsFilters.keys[result.company] // Send discounted prices to GasStationInfo if discount key is active
-										&& (<GasStationInfo result={result} bensin95={result.bensin95_discount + " ISK (með afslætti)"} diesel={result.diesel_discount + " ISK (með afslætti)"} />)}	
-									{!this.props.settingsFilters.keys[result.company] // Send regular prices to GasStationInfo if discount key is not active
-										&& (<GasStationInfo result={result} bensin95={result.bensin95 + " ISK"} diesel={result.diesel + " ISK"} />)}	
+								distance
+								&& <View style={styles.gasStationBox} key={result.key}>
+									{ this.props.settingsFilters.fuelType == 'bensin95' ?
+										<GasStationInfo result={result}
+											main_price={this.props.settingsFilters.keys[result.company] ? result.bensin95_discount : result.bensin95}
+											sub_price={!this.props.settingsFilters.keys[result.company] ? result.bensin95_discount : result.bensin95}
+											key_exists={this.props.settingsFilters.keys[result.company] != undefined ? true : false} 
+											distance={distance.toFixed(1)} />
+										:
+										<GasStationInfo result={result}
+											main_price={this.props.settingsFilters.keys[result.company] ? result.diesel_discount : result.diesel}
+											sub_price={!this.props.settingsFilters.keys[result.company] ? result.diesel_discount : result.diesel}
+											key_exists={this.props.settingsFilters.keys[result.company] != undefined ? true : false}
+											distance={distance.toFixed(1)} />
+									}
 								</View>
 							)
 					})}				
@@ -167,19 +176,19 @@ const styles = StyleSheet.create({
   scrollSection: {
     flex: 0.8
   },
-  gasStationBox: {
-      marginBottom: 10,
-      marginLeft: 5,
-      marginRight: 5,
-      marginTop: 5,
-      flexDirection: 'row',
-      justifyContent: 'space-between'
+  settingsMenu: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#2d4b2d'
   },
-  gasStationTitle: {
-  	fontWeight: 'bold',
+  settingsText: {
+  	color: 'white',
+  	margin: 5
   },
-  gasStationText: {
-  }
+  row: {
+  	flexDirection: 'row',
+  	justifyContent: 'space-between'
+  },
 });
 
 function mapStateToProps(state){

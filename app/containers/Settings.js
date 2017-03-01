@@ -15,18 +15,6 @@ import { setFuelType, setDistanceLength } from '../actions/settings'
 import DiscountSwitch from '../components/DiscountSwitch' 
 
 class Settings extends Component {
-	static navigationOptions = {
-		title: 'Stillingar',
-		header: {
-			style: {
-				backgroundColor: '#548b54',
-			},
-			titleStyle: {
-				color: '#FFFFFF'
-			}
-		}
-	};
-
 	constructor(props){
 		super(props);
 	}
