@@ -14,7 +14,6 @@ class MainResults extends Component {
 
 	// Returns gas stations in order
 	mapGasStations(){
-		console.log("Inside map gas stations")
 		keys = this.props.settingsFilters.keys;
 		fuelType = this.props.settingsFilters.fuelType;
 		data = this.props.gasPrices.data;
