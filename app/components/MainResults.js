@@ -80,18 +80,22 @@ class MainResults extends Component {
 							distance
 							&& <View key={result.key}>
 							{ this.props.settingsFilters.fuelType == 'bensin95' ?
-								<GasStationInfo result={result}
+								<GasStationInfo
+									result={result}
 									main_price={this.props.settingsFilters.keys[result.company] ? result.bensin95_discount : result.bensin95}
 									sub_price={!this.props.settingsFilters.keys[result.company] ? result.bensin95_discount : result.bensin95}
 									key_exists={this.props.settingsFilters.keys[result.company] != undefined ? true : false} 
-									distance={distance.toFixed(1)} />
+									distance={distance.toFixed(1)}
+									navigation={this.props.navigation} />
 									:
-									<GasStationInfo result={result}
+									<GasStationInfo
+										result={result}
 										main_price={this.props.settingsFilters.keys[result.company] ? result.diesel_discount : result.diesel}
 										sub_price={!this.props.settingsFilters.keys[result.company] ? result.diesel_discount : result.diesel}
 										key_exists={this.props.settingsFilters.keys[result.company] != undefined ? true : false}
-										distance={distance.toFixed(1)} />
-									}
+										distance={distance.toFixed(1)}
+										navigation={this.props.navigation} />
+							}
 							</View>
 						)
 				})}

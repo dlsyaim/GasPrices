@@ -9,7 +9,7 @@ class AppContainer extends Component {
     render(){
     	return (
 			<Navigator />
-    	)
+		)
     }
 }
 

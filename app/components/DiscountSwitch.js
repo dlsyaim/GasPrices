@@ -28,7 +28,7 @@ class DiscountSwitch extends Component {
 				<Switch
 		       		onValueChange={ () => this.setDiscount(this.stationName, !this.props.settingsFilters.keys[this.stationName]) }
 		         	value={ this.props.settingsFilters.keys[this.stationName] } />
-		         <Text>{this.stationName}</Text>
+		         <Text style={styles.gasStationName}>{this.stationName}</Text>
 		   	</View>
 		)
 	}
@@ -38,6 +38,9 @@ const styles = StyleSheet.create({
   row: {
   	flexDirection: 'row',
   },
+  gasStationName: {
+  	fontSize: 25
+  }
 });
 
 function mapStateToProps(state){

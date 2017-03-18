@@ -7,7 +7,7 @@ import {
 	Switch,
 	StyleSheet,
 	Picker,
-	Slider
+	Slider,
 } from 'react-native'
 
 import { setFuelType, setDistanceLength } from '../actions/settings' 
@@ -28,45 +28,47 @@ class Settings extends Component {
 
 	render() {
 		return(
-			<View style={styles.scene}>
-				<View style={styles.setting}>
-					<Text style={styles.settingTitle}>Eldsneyti</Text>
-				      <Picker selectedValue={this.props.settingsFilters.fuelType} onValueChange = {(value) => this.setFuel(value) }>
-				         <Picker.Item label="Bensín 95" value="bensin95" />
-				         <Picker.Item label="Dísel" value="diesel" />
-				      </Picker>
-		        </View>
-		        <View style={styles.setting}>
-					<Text style={styles.settingTitle}>Fjarlægð</Text>
-					<View style={styles.row}>
-						<Slider 
-							value={this.props.settingsFilters.distance}
-							minimumValue={0.2}
-							maximumValue={10}
-							step={0.1}
-							onSlidingComplete={ (value) => this.setDistance(value) } 
-							style={styles.slider} />
-						<Text style={{width: 100}}>{this.props.settingsFilters.distance.toFixed(1)} km</Text>
+				<View style={styles.scene}>
+					<View style={styles.setting}>
+						<Text style={styles.settingTitle}>Eldsneyti</Text>
+					      <Picker selectedValue={this.props.settingsFilters.fuelType} onValueChange = {(value) => this.setFuel(value) }>
+					         <Picker.Item label="Bensín 95" value="bensin95" />
+					         <Picker.Item label="Dísel" value="diesel" />
+					      </Picker>
+			        </View>
+			        <View style={styles.setting}>
+						<Text style={styles.settingTitle}>Fjarlægð</Text>
+						<View style={styles.row}>
+							<Slider 
+								value={this.props.settingsFilters.distance}
+								minimumValue={0.2}
+								maximumValue={10}
+								step={0.1}
+								onSlidingComplete={ (value) => this.setDistance(value) } 
+								style={styles.slider} />
+							<Text style={{width: 100}}>{this.props.settingsFilters.distance.toFixed(1)} km</Text>
+						</View>
 					</View>
-				</View>
 
-				<View style={styles.setting}>
-					<Text style={styles.settingTitle}>Afsláttarlyklar</Text>
-					<DiscountSwitch stationName="Orkan" />
-					<DiscountSwitch stationName="Atlantsolía" />
-					<DiscountSwitch stationName="ÓB" />
-					<DiscountSwitch stationName="N1" />
-					<DiscountSwitch stationName="Olís" />
-					<DiscountSwitch stationName="Skeljungur" />
-	          	</View>
-			</View>
+					<View style={styles.setting}>
+						<Text style={styles.settingTitle}>Afsláttarkort og lyklar</Text>
+						<DiscountSwitch stationName="Orkan" />
+						<DiscountSwitch stationName="Atlantsolía" />
+						<DiscountSwitch stationName="ÓB" />
+						<DiscountSwitch stationName="N1" />
+						<DiscountSwitch stationName="Olís" />
+						<DiscountSwitch stationName="Skeljungur" />
+		          	</View>
+				</View>
 		)
 	}
 }
 
 const styles = StyleSheet.create({
   scene: {
-  	margin: 5,
+  	padding: 5,
+  	backgroundColor: '#FFFFFF',
+  	flex: 1
   },
   settingTitle: {
     fontSize: 20,

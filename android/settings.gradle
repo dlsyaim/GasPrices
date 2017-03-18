@@ -1,3 +1,4 @@
-rootProject.name = 'GasPrices'
-
+rootProject.name = 'Eldsneytisverð'
+include ':RNAdMob'
+project(':RNAdMob').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-admob/android')
 include ':app'

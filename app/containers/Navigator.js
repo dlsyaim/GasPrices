@@ -6,12 +6,13 @@ import { StackNavigator } from 'react-navigation';
 // Import scenes
 import Home from './Home'
 import Settings from './Settings'
+import StationMap from './StationMap'
 
 const Navigator = StackNavigator({
 	Home: {
 		screen: Home,
 		navigationOptions: {
-			title: 'Gasvaktin',
+			title: 'Eldsneytisverð',
       		header: {
 				style: {
 					backgroundColor: '#548b54',
@@ -26,6 +27,20 @@ const Navigator = StackNavigator({
 		screen: Settings,
 		navigationOptions: {
 			title: 'Stillingar',
+			header: {
+				style: {
+					backgroundColor: '#548b54',
+				},
+				titleStyle: {
+					color: '#FFFFFF'
+				}
+			}
+		}
+	},
+	StationMap: {
+		screen: StationMap,
+		navigationOptions: {
+			title: 'Kort',
 			header: {
 				style: {
 					backgroundColor: '#548b54',

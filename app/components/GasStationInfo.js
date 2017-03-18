@@ -6,8 +6,7 @@ import {
 	Image,
 	Switch,
 	StyleSheet,
-	Picker,
-	Slider
+	TouchableHighlight
 } from 'react-native'
 
 class GasStationInfo extends Component {
@@ -29,80 +28,81 @@ class GasStationInfo extends Component {
 
 	render() {
 		return(
-			<View style={styles.gasStationBox}>
-				<View style={styles.row}>
-					<Image style={styles.icons} source={this.images[this.props.result.company]} />
-					<View style={styles.gasStationTextBox}>
-						<Text style={styles.gasStationTitle}>{this.props.result.company} {this.props.result.name}</Text>
-						<View>
-							{ this.props.main_price < this.props.sub_price 
-								&& [<Text style={styles.gasStationText}>{this.props.main_price} ISK {this.props.key_exists && this.with_key}</Text>,
-								[this.props.key_exists && <Text style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.without_key]}</Text>]]
-							}
-							{
-								this.props.main_price > this.props.sub_price
-								&& [<Text style={styles.gasStationText}>{this.props.main_price} ISK {this.props.key_exists && this.without_key}</Text>,
-								[this.props.key_exists && <Text style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.with_key]}</Text>]]
-							}
+			<TouchableHighlight onPress={() => this.props.navigation.navigate('StationMap', {result: this.props.result, DSOFHOSodsijOIFSGJOIFGJFDOIGJDFOGIJFDOGIFDJGIJ: 'one'})}>
+				<View style={styles.gasStationBox}>
+					<View style={styles.row}>
+						<Image style={styles.icons} source={this.images[this.props.result.company]} />
+						<View style={styles.gasStationTextBox}>
+							<Text style={styles.gasStationTitle}>{this.props.result.company} {this.props.result.name}</Text>
+							<View>
+								{ this.props.main_price < this.props.sub_price 
+									&& [<Text key={'k1'} style={styles.gasStationText}>{this.props.main_price} ISK {this.props.key_exists && this.with_key}</Text>,
+									[this.props.key_exists && <Text key={'k2'} style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.without_key]}</Text>]]
+								}
+								{
+									this.props.main_price > this.props.sub_price
+									&& [<Text key={'k3'} style={styles.gasStationText}>{this.props.main_price} ISK {this.props.key_exists && this.without_key}</Text>,
+									[this.props.key_exists && <Text key={'k4'} style={styles.gasStationSubtext}>{this.props.sub_price} {['ISK ' + this.with_key]}</Text>]]
+								}
+							</View>
 						</View>
 					</View>
+					<View style={styles.mapView}>
+						<Image style={styles.map} source={require('../images/mapIcon.png')} />
+						<Text style={styles.distanceText}>{this.props.distance + ' km'}</Text>
+					</View>
 				</View>
-				<View style={styles.mapView}>
-					<Image style={styles.map} source={require('../images/mapIcon.png')} />
-					<Text style={styles.distanceText}>{this.props.distance + ' km'}</Text>
-				</View>
-			</View>
+			</TouchableHighlight>
 		)
 	}
 }
 
 const styles = StyleSheet.create({
 	  gasStationBox: {
-	      marginBottom: 10,
-	      marginLeft: 10,
-	      marginRight: 10,
-	      marginTop: 5,
 	      flex: 1,
 	      flexDirection: 'row',
 	      justifyContent: 'space-between',
 	      backgroundColor: 'white',
-	      alignItems: 'center'
+	      alignItems: 'center',
+	      justifyContent: 'center',
+	      padding: 7,
+	      margin: 0.5,
 	  },
 	  row: {
 	  	flexDirection: 'row',
-	  	flex: 0.85,
+	  	flex: 0.80,
+	  	alignItems: 'center'
 	  },
 	  gasStationTitle: {
-	  	fontWeight: 'bold',
 	  },
 	  gasStationText: {
-	  	fontSize: 15,
+	  	fontSize: 18,
+	  	fontWeight: 'bold'
 	  },
 	  gasStationSubtext: {
 	  	fontSize: 12,
 	  	fontStyle: 'italic'
 	  },
 	  icons: {
-	  	width: 70,
-	  	height: 70,
+	  	width: 50,
+	  	height: 50,
 	  	margin: 5,
-	  	flex: 0
 	  },
 	  gasStationTextBox: {
 	  	marginTop: 5,
 	  },
 	  map: {
-	  	width: 30,
-	  	height: 30,
+	  	width: 25,
+	  	height: 25,
 	  	backgroundColor: 'red',
 	  	margin: 5,
 	  },
 	  mapView: {
-	  	flex: 0.15,
+	  	flex: 0.20,
 	  	alignItems: 'center'
 	  },
 	  distanceText: {
-	  	fontSize: 10,
+	  	fontSize: 15,
 	  }
 });
 

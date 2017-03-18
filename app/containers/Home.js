@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+
 import { connect } from 'react-redux';
 import {
 	ScrollView,
@@ -10,7 +11,12 @@ import {
 } from 'react-native'
 import { fetchGasPrices } from '../actions/gas' 
 import MainResults from '../components/MainResults' 
-
+import { 
+  AdMobBanner, 
+  AdMobInterstitial, 
+  PublisherBanner,
+  AdMobRewarded
+} from 'react-native-admob'
 
 class Home extends Component {
 	constructor(props){
@@ -32,7 +38,7 @@ class Home extends Component {
           			longitude: position.coords.longitude,
 				});
 			},
-			(error) => alert(JSON.stringify("Error getting GPS coordinates.")),
+			(error) => alert(JSON.stringify(error.message)),
 			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 		);
 		this.watchID = navigator.geolocation.watchPosition((position) => {
@@ -74,9 +80,14 @@ class Home extends Component {
 	                   		style={[{height: 80}]}		
 	                    	size="large"		
  	                 	/>
- 	                 	: <MainResults latitude={this.state.latitude} longitude={this.state.longitude} />
+ 	                 	: <MainResults latitude={this.state.latitude} longitude={this.state.longitude} navigation={this.props.navigation} />
  	                 }
  	            </ScrollView>
+ 	            <AdMobBanner
+				  bannerSize="fullBanner"
+				  adUnitID="insert_adunitID_here"
+				  testDeviceID="EMULATOR"
+				  didFailToReceiveAdWithError={this.bannerError} />
 			</View>
 		)
 	}
@@ -93,12 +104,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
 	alignItems: 'center',
-	margin: 10
+	padding: 10,
+	backgroundColor: '#FFFFFF'
   },
   settingsText: {
   	color: 'black',
   	fontWeight: 'bold',
-  	margin: 5
+  	margin: 5,
+  	fontSize: 15
   },
   settingsTextBar: {
   	left: 0,
